@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  mysqldb:
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    ports:
+      - ${DB_PORT}:3306
+    volumes:
+      - ./dbgamedev:/var/lib/mysql
+  redis:
+    image: redis:6.2
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
+    restart: unless-stopped
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - redisdata:/data
+  api:
+    extra_hosts:
+      - gateway.docker.internal:host-gateway
+    depends_on:
+      - mysqldb
+    build: .
+    restart: unless-stopped
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_DB=${REDIS_DB}
+      - REDIS_PORT=6379
+      - GLOBAL_REDIS_PORT=6999
+      - GLOBAL_REDIS_DB=3
+      - GLOBAL_REDIS_HOST=gateway.docker.internal
+      - RABBITMQ_HOST=amqp://user:bitnami@gateway.docker.internal:5600
+      - DB_HOST=mysqldb
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=3306
+      - SERVICE_PORT=${SERVICE_PORT}
+    ports:
+      - ${SERVICE_PORT}:${SERVICE_PORT}
+    stdin_open: true
+    tty: true
+volumes:
+  redisdata:
+  db:

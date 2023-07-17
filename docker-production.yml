@@ -1,0 +1,40 @@
+version: "3.8"
+networks: 
+  game-staging:
+    name: game-staging
+services:
+  mysqldb:
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    ports:
+      - ${DB_PORT}:3306
+    expose:
+      - "${DB_PORT}"
+    volumes:
+      - ./dbgamestaging:/var/lib/mysql
+    networks:
+      - game-staging
+  api:
+    depends_on:
+      - mysqldb
+    build: .
+    restart: unless-stopped
+    environment:
+      - DB_HOST=mysqldb
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=3306
+      - SERVICE_PORT=${SERVICE_PORT}
+    ports:
+      - ${SERVICE_PORT}:${SERVICE_PORT}
+    stdin_open: true
+    tty: true
+    networks:
+      - game-staging
+volumes:
+  redisstaging:
+  dbstaging:

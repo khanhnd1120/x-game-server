@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+*.log
+*audit.json
+
+.env-local
+.env.local
+.idea
+yarn.lock
+.env.staging
+
+dbgamedev
+dbgamestaging

@@ -1,0 +1,12 @@
+{
+
+  "scripts": {
+    "sql": "node game.js"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "fs": "^0.0.1-security",
+    "google-spreadsheet": "^3.1.15",
+    "googleapis": "^89.0.0"
+  }
+}

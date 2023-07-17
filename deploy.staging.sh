@@ -1,0 +1,1 @@
+docker-compose --env-file .env.local -f docker-production.yml up -d --build --force-recreate
