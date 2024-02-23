@@ -19,7 +19,6 @@ import test from "./test";
 
 //@ts-ignore
 import { fastifyRequestContextPlugin } from "fastify-request-context";
-import rabbit from "./services/rabbitmq";
 import bootstrap from "./services/bootstrap";
 /**
  * App Variables
@@ -32,7 +31,6 @@ if (!process.env.SERVICE_PORT) {
  */
 db().then(async () => {
   await bootstrap();
-  rabbit.init();
   const fastifyAPI = Fastify();
   fastifyAPI.register(require("fastify-multipart"));
   fastifyAPI.register(require("fastify-compress"), { global: false });

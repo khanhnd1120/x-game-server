@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../config/api-config";
 import { v4 as uuidv4 } from "uuid";
+import { Environment } from "../config/environment";
 function uid(): string {
   return uuidv4();
 }
@@ -23,18 +24,30 @@ async function compare(text: string, hash: string): Promise<void> {
 
 async function signJwt(
   data: any,
-  expiresIn: number,
-  key: string = config.JWT_SECRET
-): Promise<string | undefined> {
+  expiresIn?: number,
+  key: string = Environment.JWT_SECRET
+): Promise<string> {
   return await new Promise((resolve, reject) => {
-    jwt.sign(
-      data,
-      key,
-      { algorithm: "HS256", expiresIn },
-      (err: Error | null, token: string | undefined) => {
-        resolve(token);
-      }
-    );
+    if (expiresIn) {
+      jwt.sign(
+        data,
+        key,
+        { algorithm: "HS256", expiresIn },
+        (err: Error | null, token: string | undefined) => {
+          resolve(token);
+        }
+      );
+    } else {
+      console.log("blo")
+      jwt.sign(
+        data,
+        key,
+        { algorithm: "HS256" },
+        (err: Error | null, token: string | undefined) => {
+          resolve(token);
+        }
+      );
+    }
   });
 }
 async function verifyJwt(
