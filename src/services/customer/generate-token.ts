@@ -1,11 +1,13 @@
 import ApiConfig from "../../config/api-config";
-import { crypt } from "../../services";
+import { crypt, redis } from "../../services";
 
 export default async function generateToken(
   twitterToken: string,
   twitterSecret: string
 ): Promise<string> {
   const refresh = crypt.uid();
+  const key = `accesstoken_${1}`;
+  await redis.set(key, refresh);
   let input = {
     twitterToken,
     twitterSecret,

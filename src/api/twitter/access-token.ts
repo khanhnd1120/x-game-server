@@ -5,7 +5,7 @@ import generateToken from "../../services/customer/generate-token";
 export default async function (app: fastify.FastifyInstance) {
   app.route({
     method: "POST",
-    url: "/access_token",
+    url: "/access-token",
     schema: {
       body: {
         type: "object",

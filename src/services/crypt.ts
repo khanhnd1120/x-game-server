@@ -52,7 +52,7 @@ async function signJwt(
 }
 async function verifyJwt(
   token: string,
-  key: string = config.JWT_SECRET
+  key: string = Environment.JWT_SECRET
 ): Promise<any> {
   return await new Promise((resolve, reject) => {
     jwt.verify(token, key, function (err: any, decoded: any) {
