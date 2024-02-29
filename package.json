@@ -71,6 +71,7 @@
     "oauth": "^0.10.0",
     "phantom": "^6.3.0",
     "prettier": "^2.8.8",
+    "randomstring": "^1.3.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "sequelize": "^6.7.0",
@@ -82,6 +83,7 @@
     "xid-js": "^1.0.1"
   },
   "devDependencies": {
+    "@fastify/request-context": "^4.0.0",
     "@types/bluebird": "^3.5.36",
     "@types/cors": "^2.8.12",
     "@types/dotenv": "^8.2.0",
@@ -91,7 +93,6 @@
     "typescript": "^4.4.3",
     "webpack": "^5.57.1",
     "webpack-cli": "^4.8.0",
-    "webpack-node-externals": "^3.0.0",
-    "@fastify/request-context": "^4.0.0"
+    "webpack-node-externals": "^3.0.0"
   }
 }

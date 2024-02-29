@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize-typescript";
 import { Environment } from "./config/environment";
+import { PasswordEntity, RoleEntity, UserEntity } from "./entities";
 export const sequelize = new Sequelize({
   database: process.env.DB_NAME,
   port: Number(process.env.DB_PORT || 3306),
@@ -7,7 +8,7 @@ export const sequelize = new Sequelize({
   dialect: "mysql",
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  models: [],
+  models: [PasswordEntity, UserEntity, RoleEntity],
   // query: { raw: true },
   logging: false,
   pool: {

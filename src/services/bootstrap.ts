@@ -1,8 +1,5 @@
-import { Environment } from "../config/environment";
+import { RoleEntity } from "../entities";
 
 export default async function bootstrap() {
-  if (Environment.IS_WORKER) {
-    return;
-  }
-  console.log("refresh leader board arena");
+  RoleEntity.runRefresh();
 }

@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import config from "../config/api-config";
 import { v4 as uuidv4 } from "uuid";
 import { Environment } from "../config/environment";
+//@ts-ignore
+import randomstring from "randomstring";
 function uid(): string {
   return uuidv4();
 }
@@ -38,7 +40,7 @@ async function signJwt(
         }
       );
     } else {
-      console.log("blo")
+      console.log("blo");
       jwt.sign(
         data,
         key,
@@ -95,7 +97,17 @@ function returnJSON(data: any, fields: string[]) {
   });
   return tmp;
 }
+function randomString(size: number) {
+  return randomstring.generate({
+    length: size,
+    charset: "alphabetic",
+  });
+}
+function generateToken() {
+  return randomString(64);
+}
 const crypt = {
+  generateToken,
   signJwt,
   verifyJwt,
   compare,
