@@ -7,10 +7,10 @@ export default async function VerifyJWTToken(authorization: string) {
   }
   try {
     let token = authorization.split(" ")[1];
-    let { twitterToken, twitterSecret } = await parseToken(token);
+    let { twitterToken, twitterSecret, userInfo } = await parseToken(token);
     requestContext.set("twitterToken", twitterToken);
     requestContext.set("twitterSecret", twitterSecret);
-    return { twitterToken, twitterSecret };
+    return { twitterToken, twitterSecret, userInfo };
   } catch (error) {
     throw new Error("forbidden");
   }

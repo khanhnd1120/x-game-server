@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Quests",
+    "icon": "cog",
+    "permissions": [],
+    "children": [
+      {
+        "name": "Setting Twitter Quest",
+        "url": "/custom-setting/setting-twitter-quest",
+        "icon": "cog",
+        "permissions": [0]
+      },
+      {
+        "name": "White List Quest",
+        "url": "/setting/WHITE_LIST_X_ACCOUNT_SHOW_QUEST",
+        "icon": "cog",
+        "permissions": [0]
+      }
+    ]
+  }
+]

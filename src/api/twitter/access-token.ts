@@ -24,10 +24,14 @@ export default async function (app: fastify.FastifyInstance) {
         verifier,
         secret,
       });
-      const gameToken = await generateToken(tokenData.token, tokenData.secret);
-      console.log(tokenData.token, tokenData.secret, gameToken)
+      const gameToken = await generateToken(
+        tokenData.token,
+        tokenData.secret,
+        tokenData.customerInfo.id
+      );
       return {
         gameToken,
+        customerInfo: tokenData.customerInfo,
       };
     },
   });

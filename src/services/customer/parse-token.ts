@@ -1,16 +1,19 @@
 import { crypt, redis } from "..";
 import { ApiConfig } from "../../config";
 import { requestContext } from "@fastify/request-context";
+import { CustomerEntity } from "../../entities";
 
 export default async function parseToken(token: string): Promise<{
   twitterToken: string;
   twitterSecret: string;
+  userInfo: CustomerEntity
 }> {
   try {
-    let { twitterToken, twitterSecret } = await crypt.verifyJwt(token);
+    let { twitterToken, twitterSecret, usr } = await crypt.verifyJwt(token);
     return {
       twitterToken,
       twitterSecret,
+      userInfo: usr
     };
   } catch (error: any) {
     if (error.err === "expired") {

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "get-config",
+    "model": "config",
+    "action": "find",
+    "query": {},
+    "permissions": [12],
+    "request_fields": null,
+    "response_fields": []
+  },
+  {
+    "name": "update-config",
+    "model": "config",
+    "action": "update",
+    "query": {},
+    "permissions": [13],
+    "request_fields": null,
+    "response_fields": []
+  }
+]

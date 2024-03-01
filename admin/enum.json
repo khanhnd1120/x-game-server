@@ -1,0 +1,39 @@
+[
+  {
+    "items": [
+      {
+        "color": "orange",
+        "label": "Liked",
+        "value": 0
+      },
+      {
+        "color": "brown",
+        "label": "Retweeted",
+        "value": 1
+      },
+      {
+        "color": "pink",
+        "label": "Comment",
+        "value": 2
+      },
+      {
+        "color": "pink",
+        "label": "Follow",
+        "value": 3
+      }
+    ],
+    "value_type": "number",
+    "name": "twitter-quest-type"
+  },
+  {
+    "items": [
+      {
+        "color": "orange",
+        "label": "Point",
+        "value": 0
+      }
+    ],
+    "value_type": "number",
+    "name": "reward-type"
+  }
+]

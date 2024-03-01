@@ -3,7 +3,8 @@ import { crypt, redis } from "../../services";
 
 export default async function generateToken(
   twitterToken: string,
-  twitterSecret: string
+  twitterSecret: string,
+  customerId: number
 ): Promise<string> {
   const refresh = crypt.uid();
   const key = `accesstoken_${1}`;
@@ -13,7 +14,7 @@ export default async function generateToken(
     twitterSecret,
     refresh,
     usr: {
-      id: 1,
+      id: customerId,
     },
   };
   let jwtInput = input;

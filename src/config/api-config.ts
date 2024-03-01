@@ -5,6 +5,7 @@ const ApiConfig = {
   FOLDER: {
     PUBLIC: path.join(__dirname, "../../public"),
   },
+  MAX_LIMIT: 1000,
 };
 
 export default ApiConfig;

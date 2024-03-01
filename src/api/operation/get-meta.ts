@@ -14,12 +14,6 @@ export default async function (app: fastify.FastifyInstance) {
       let formInfos = admin.getAllForms();
       let gridInfos = admin.getAllGrids();
       let enumInfos = admin.getAllEnums();
-      let troopList = admin.getAllTroops();
-      let skillList = admin.getAllSkills();
-      let runeList = admin.getAllRunes();
-      let newbieQuestList = admin.getAllNewbieQuest();
-      let plotSkinList = admin.getAllPlotSkin();
-      let decorationList = admin.getAllDecor();
       let userInfo = await UserEntity.findByPk(request.user.id);
       let roleInfo = RoleEntity.getById(userInfo.role);
       userInfo.permissions = roleInfo.permissions;
@@ -30,12 +24,6 @@ export default async function (app: fastify.FastifyInstance) {
         gridInfos,
         formInfos,
         enumInfos,
-        troopList,
-        skillList,
-        runeList,
-        newbieQuestList,
-        plotSkinList,
-        decorationList,
       };
     },
   });
