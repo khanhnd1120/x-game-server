@@ -45,6 +45,7 @@ export default class ConfigEntity extends Model {
     cache.set("all_config", obj, 0);
   }
   static async intervalRefresh() {
+    ConfigEntity.refreshConfig();
     schedule.scheduleJob("*/5 * * * * *", function () {
       ConfigEntity.refreshConfig();
     });

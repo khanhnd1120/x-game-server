@@ -1,8 +1,11 @@
 import OAuth from "oauth";
 import { CustomerEntity } from "../entities";
+import { TwitterApi } from "twitter-api-v2";
 
 let oauth: OAuth.OAuth = null;
-function getOauth() {
+let oauth2: OAuth.OAuth2 = null;
+let oauth2Token = "";
+async function getOauth() {
   if (!oauth) {
     oauth = new OAuth.OAuth(
       "https://api.twitter.com/oauth/request_token",
@@ -14,7 +17,29 @@ function getOauth() {
       "HMAC-SHA1"
     );
   }
+  if (!oauth2) {
+    oauth2 = new OAuth.OAuth2(
+      process.env.TWITTER_API_KEY ?? "",
+      process.env.TWITTER_API_SECRET_KEY ?? "",
+      "https://api.twitter.com/",
+      null,
+      "oauth2/token",
+      null
+    );
+    await new Promise((resolve, reject) => {
+      oauth2.getOAuthAccessToken(
+        "",
+        { grant_type: "client_credentials" },
+        function (e, access_token, refresh_token, results) {
+          console.log("bearer: ", access_token);
+          oauth2Token = access_token;
+          resolve(oauth2Token);
+        }
+      );
+    });
+  }
 }
+// 9DAlpOIaP4mFMfTTWhL_CA8tw15MG9xj-laF1K5fbdTjutEmRO
 async function twitterGetReqByOauth(
   url: string,
   token: string,
@@ -125,7 +150,7 @@ async function getTwitterUserDataById(
   access_token_secret: string,
   id: string
 ) {
-  getOauth();
+  await getOauth();
   let response: any = await twitterGetReqByOauth(
     `https://api.twitter.com/2/users/${id}`,
     access_token,
@@ -137,22 +162,17 @@ async function getTwitterUserDataById(
   }
   return JSON.parse(response);
 }
-async function getTweetDataById(
-  access_token: string,
-  access_token_secret: string,
-  id: string
-) {
-  getOauth();
-  let response: any = await twitterGetReqByOauth(
-    `https://api.twitter.com/2/tweets/${id}`,
-    access_token,
-    access_token_secret
-  );
+async function getTweetDataById(id: string) {
+  await getOauth();
+
+  const twitterClient = new TwitterApi(oauth2Token);
+  const readOnlyClient = twitterClient.readOnly;
+  const response = await readOnlyClient.v2.get(`tweets/${id}`);
 
   if (!response) {
     throw new Error("cannot_verify_twitter");
   }
-  return JSON.parse(response);
+  return response;
 }
 
 const requestTwitter = {

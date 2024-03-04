@@ -9,7 +9,6 @@ export default async function (app: fastify.FastifyInstance) {
     method: "POST",
     url: "/get-config",
     handler: async function (req: any) {
-      req.customEncrypt = true;
       const endOfDay = new Date(dayjs().endOf("day").unix() * 1000);
       const now = new Date();
       let whiteListXAccountQuest = ConfigEntity.getConfig(
