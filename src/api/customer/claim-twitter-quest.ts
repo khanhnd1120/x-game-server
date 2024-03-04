@@ -40,34 +40,33 @@ export default async function (app: fastify.FastifyInstance) {
       if (questInfo.status == TwitterQuestStatus.Claimed) {
         throw new Error("invalid_quest_status");
       }
-      switch (questInfo.type) {
-        case TwitterQuestType.Liked:
-          if()
-          break;
-        case TwitterQuestType.Follow:
-        case TwitterQuestType.Retweeted:
-        case TwitterQuestType.Comment:
-          const tweetQuest = await requestTwitter.getTweetDataById(
-            request.twitterToken,
-            request.twitterSecret,
-            twitter_quest_id
-          );
-          if (!tweetQuest) {
-            throw new Error("tweet_not_found");
-          }
-          questInfos.push(
-            new TwitterQuestEntity({
-              customer_id: customerInfo.id,
-              type,
-              twitter_quest_id,
-            })
-          );
-          console.log(tweetQuest);
-      }
-      await sequelize.transaction(async (t: Transaction) => {
-        questInfos.map((questInfo) => questInfo.save({ transaction: t }));
-      });
-      return { customerInfo, questInfos };
+      // switch (questInfo.type) {
+      //   case TwitterQuestType.Liked:
+      //     break;
+      //   case TwitterQuestType.Follow:
+      //   case TwitterQuestType.Retweeted:
+      //   case TwitterQuestType.Comment:
+      //     const tweetQuest = await requestTwitter.getTweetDataById(
+      //       request.twitterToken,
+      //       request.twitterSecret,
+      //       twitter_quest_id
+      //     );
+      //     if (!tweetQuest) {
+      //       throw new Error("tweet_not_found");
+      //     }
+      //     questInfos.push(
+      //       new TwitterQuestEntity({
+      //         customer_id: customerInfo.id,
+      //         type,
+      //         twitter_quest_id,
+      //       })
+      //     );
+      //     console.log(tweetQuest);
+      // }
+      // await sequelize.transaction(async (t: Transaction) => {
+      //   questInfos.map((questInfo) => questInfo.save({ transaction: t }));
+      // });
+      // return { customerInfo, questInfos };
     },
   });
 }
