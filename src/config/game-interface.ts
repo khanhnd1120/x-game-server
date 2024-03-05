@@ -23,7 +23,7 @@ export enum TwitterQuestType {
 export enum TwitterQuestStatus {
   Created,
   Finished,
-  Claimed
+  Claimed,
 }
 export enum RewardType {
   Point,
@@ -36,4 +36,8 @@ export interface TwitterQuestConfig {
   type: TwitterQuestType;
   rewards: RewardEntity[];
   rate: number;
+}
+
+export enum CustomerResource {
+  Point,
 }

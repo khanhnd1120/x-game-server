@@ -52,8 +52,6 @@ export default async function (app: fastify.FastifyInstance) {
         case TwitterQuestType.Retweeted:
         case TwitterQuestType.Comment:
           const tweetQuest = await requestTwitter.getTweetDataById(
-            request.twitterToken,
-            request.twitterSecret,
             twitter_quest_id
           );
           if (!tweetQuest) {

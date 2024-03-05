@@ -1,10 +1,13 @@
 import OAuth from "oauth";
-import { CustomerEntity } from "../entities";
-import { TwitterApi } from "twitter-api-v2";
+import { ConfigEntity, CustomerEntity, NewbieQuestEntity } from "../entities";
+import { TwitterApi, TwitterApiReadOnly } from "twitter-api-v2";
+import { ConfigKey, TwitterQuestType } from "../config/game-interface";
+import { sequelize } from "../database";
+import { Transaction } from "sequelize";
 
 let oauth: OAuth.OAuth = null;
 let oauth2: OAuth.OAuth2 = null;
-let oauth2Token = "";
+let twitterClient: TwitterApiReadOnly = null;
 async function getOauth() {
   if (!oauth) {
     oauth = new OAuth.OAuth(
@@ -31,15 +34,14 @@ async function getOauth() {
         "",
         { grant_type: "client_credentials" },
         function (e, access_token, refresh_token, results) {
-          console.log("bearer: ", access_token);
-          oauth2Token = access_token;
-          resolve(oauth2Token);
+          const twitterApi = new TwitterApi(access_token);
+          twitterClient = twitterApi.readOnly;
+          resolve(twitterClient);
         }
       );
     });
   }
 }
-// 9DAlpOIaP4mFMfTTWhL_CA8tw15MG9xj-laF1K5fbdTjutEmRO
 async function twitterGetReqByOauth(
   url: string,
   token: string,
@@ -136,7 +138,27 @@ async function accessTwitterToken({
       twitter_username: twitterUserData.data.username,
       point: 0,
     });
-    await customerInfo.save();
+    let newbieQuestInfos: NewbieQuestEntity[] = [];
+    const questConfig = ConfigEntity.getConfig(ConfigKey.SETTING_TWITTER_QUEST);
+    [TwitterQuestType.Liked, TwitterQuestType.Follow].map((type) => {
+      newbieQuestInfos.push(
+        new NewbieQuestEntity({
+          type,
+          rewards: questConfig[type].rewards,
+          twitter_quest_username: "Monsterra_P2E",
+        })
+      );
+    });
+    console.log(newbieQuestInfos)
+    await sequelize.transaction(async (t: Transaction) => {
+      await customerInfo.save({ transaction: t });
+      await Promise.all(
+        newbieQuestInfos.map(async (quest) => {
+          quest.customer_id = customerInfo.id;
+          await quest.save({ transaction: t });
+        })
+      );
+    });
   }
 
   return {
@@ -165,21 +187,42 @@ async function getTwitterUserDataById(
 async function getTweetDataById(id: string) {
   await getOauth();
 
-  const twitterClient = new TwitterApi(oauth2Token);
-  const readOnlyClient = twitterClient.readOnly;
-  const response = await readOnlyClient.v2.get(`tweets/${id}`);
+  const response = await twitterClient.v2.get(
+    `tweets/${id}?expansions=author_id&user.fields=username`
+  );
 
   if (!response) {
-    throw new Error("cannot_verify_twitter");
+    throw new Error("tweet_not_found");
   }
   return response;
 }
+async function getCommentOfTweet(tweetId: string, authId: string) {
+  const response = await twitterClient.v2.get(
+    `tweets/search/recent?query=conversation_id:${tweetId}%20from:${authId}`
+  );
 
+  if (!response) {
+    throw new Error("tweet_not_found");
+  }
+  return response;
+}
+async function getRetweetOfTweet(tweetId: string, authId: string) {
+  const response = await twitterClient.v2.get(
+    `tweets/search/recent?query=retweets_of_tweet_id:${tweetId}%20from:${authId}`
+  );
+
+  if (!response) {
+    throw new Error("tweet_not_found");
+  }
+  return response;
+}
 const requestTwitter = {
   requestTwitterToken,
   accessTwitterToken,
   getTwitterUserDataById,
   getTweetDataById,
+  getCommentOfTweet,
+  getRetweetOfTweet,
 };
 
 export default requestTwitter;

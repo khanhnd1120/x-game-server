@@ -3,6 +3,7 @@ import { Environment } from "./config/environment";
 import {
   ConfigEntity,
   CustomerEntity,
+  NewbieQuestEntity,
   PasswordEntity,
   RoleEntity,
   TwitterQuestEntity,
@@ -22,6 +23,7 @@ export const sequelize = new Sequelize({
     ConfigEntity,
     TwitterQuestEntity,
     CustomerEntity,
+    NewbieQuestEntity,
   ],
   // query: { raw: true },
   logging: false,
